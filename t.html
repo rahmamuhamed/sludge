@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تجربة الإنتاج - Humus Reborn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #B0E0E6;
+            --secondary-color: #E6E6FA;
+            --accent-color: #4ca3ff;
+            --pink: #ffd6e6;
+            --yellow: #fff7cc;
+            --text-dark: #0b0b0b;
+            --text-gray: #6b6b6b;
+            --card-bg: #ffffff;
+            --welcome-bg: #4ca3ff;
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 6px 18px rgba(12, 18, 30, 0.08);
+            --transition: all 0.3s ease;
+            --excellent: #4CAF50;
+            --good: #FFC107;
+            --poor: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid rgba(76, 163, 255, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+            background: rgba(76, 163, 255, 0.1);
+        }
+
+        .nav-links a.cta {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .experiment-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .page-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: var(--text-gray);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .video-section {
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            background: white;
+        }
+
+        .video-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .timeline-section {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .timeline-step {
+            display: flex;
+            position: relative;
+            margin: 3rem 0;
+            width: 100%;
+        }
+
+        .timeline-step-left {
+            justify-content: flex-start;
+            padding-right: 50%;
+        }
+
+        .timeline-step-right {
+            justify-content: flex-end;
+            padding-left: 50%;
+        }
+
+        .timeline-content {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 30px rgba(20, 30, 60, 0.12);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            width: 40px;
+            height: 40px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(76, 163, 255, 0.3);
+            z-index: 2;
+        }
+
+        .timeline-step-left .step-number {
+            right: -20px;
+        }
+
+        .timeline-step-right .step-number {
+            left: -20px;
+        }
+
+        .step-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .step-description {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .step-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            font-size: 3rem;
+            margin-top: 1rem;
+        }
+
+        footer {
+            background: var(--welcome-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(76, 163, 255, 0.1);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--yellow);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background: #ffffff;
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 100%;
+                background: var(--card-bg);
+                padding: 1rem 0;
+                box-shadow: var(--shadow);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .experiment-container {
+                margin-top: 80px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .page-subtitle {
+                font-size: 1rem;
+            }
+            
+            .video-placeholder {
+                height: 300px;
+            }
+            
+            .timeline::before {
+                right: 31px;
+            }
+            
+            .timeline-step-left,
+            .timeline-step-right {
+                padding: 0;
+                justify-content: flex-start;
+            }
+            
+            .timeline-content {
+                width: 100%;
+                margin-right: 50px;
+            }
+            
+            .step-number {
+                right: -55px !important;
+                left: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Humus Reborn — تجربة الإنتاج</a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="ai-system.html">نظام الذكاء الاصطناعي</a></li>
+                <li><a href="#video">شاهد التجربة</a></li>
+                <li><a class="cta" href="#steps">خطوات التجربة</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="experiment-container">
+        <h1 class="page-title" data-aos="fade-up">رحلة تحويل الحمأة: خطوات تجربة الإنتاج</h1>
+        <p class="page-subtitle" data-aos="fade-up" data-aos-delay="200">
+            اكتشفوا العملية الكاملة لتحويل الحمأة إلى ألواح عزل ذكية، من التحضير الأولي إلى المنتج النهائي.
+        </p>
+        
+        <!-- قسم الفيديو التوضيحي -->
+        <section class="video-section" id="video">
+            <h2 class="section-title" data-aos="fade-up">شاهد التجربة: الفيديو التوضيحي</h2>
+            <div class="video-container" data-aos="zoom-in" data-aos-delay="300">
+                <div class="video-placeholder">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="video-text">مشاهدة مباشرة: رحلتنا من الحمأة إلى ألواح العزل</div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">سيتم تضمين الفيديو التجريبي هنا</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- قسم خطوات التجربة -->
+        <section class="timeline-section" id="steps">
+            <h2 class="section-title" data-aos="fade-up">خطوات التجربة</h2>
+            <div class="timeline">
+                <!-- الخطوة 1 - على اليسار -->
+                <div class="timeline-step timeline-step-left" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <h3 class="step-title">مرحلة التجفيف الأولي للحمأة</h3>
+                        <p class="step-description">
+                            جمع الحمأة من المصدر وتجفيفها طبيعياً أو باستخدام وسائل ميكانيكية لتقليل نسبة الرطوبة بشكل كبير، استعداداً للمعالجة اللاحقة.
+                        </p>
+                        <div class="step-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 2 - على اليمين -->
+                <div class="timeline-step timeline-step-right" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">
+                            <i class="fas fa-mortar-pestle"></i>
+                        </div>
+                        <h3 class="step-title">مرحلة الطحن والتحضير</h3>
+                        <p class="step-description">
+                            طحن الحمأة المجففة إلى مسحوق ناعم ومتجانس، لزيادة مساحة السطح وضمان تفاعلها الفعال مع المكونات الأخرى.
+                        </p>
+                        <div class="step-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 3 - على اليسار -->
+                <div class="timeline-step timeline-step-left" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="step-title">تحديد نسب المكونات بالذكاء الاصطناعي</h3>
+                        <p class="step-description">
+                            استخدام نموذج الذكاء الاصطناعي لتحديد النسب المثلى للحمأة المطحونة، الركام، الإضافات الكيميائية، والماء لتحقيق خصائص العزل المطلوبة.
+                        </p>
+                        <div class="step-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 4 - على اليمين -->
+                <div class="timeline-step timeline-step-right" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="step-number">4</div>
+                        <div class="step-icon">
+                            <i class="fas fa-blender"></i>
+                        </div>
+                        <h3 class="step-title">مرحلة الخلط المتجانس</h3>
+                        <p class="step-description">
+                            خلط جميع المكونات بالنسب المحددة في خلاط خاص، لضمان الحصول على عجينة متجانسة وخالية من التكتلات.
+                        </p>
+                        <div class="step-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 5 - على اليسار -->
+                <div class="timeline-step timeline-step-left" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="step-number">5</div>
+                        <div class="step-icon">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <h3 class="step-title">مرحلة التشكيل والصب في القوالب</h3>
+                        <p class="step-description">
+                            صب العجينة المخلوطة في قوالب مخصصة لألواح العزل، والتأكد من توزيعها بالتساوي وإزالة أي فقاعات هوائية.
+                        </p>
+                        <div class="step-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 6 - على اليمين -->
+                <div class="timeline-step timeline-step-right" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="step-number">6</div>
+                        <div class="step-icon">
+                            <i class="fas fa-temperature-high"></i>
+                        </div>
+                        <h3 class="step-title">مرحلة المعالجة والتقسية (Curing)</h3>
+                        <p class="step-description">
+                            ترك الألواح المصبوبة لتجف وتتصلب في ظروف بيئية متحكم بها (مثل الرطوبة ودرجة الحرارة) لعدة أيام، لاكتساب القوة والمتانة اللازمتين.
+                        </p>
+                        <div class="step-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 7 - على اليسار -->
+                <div class="timeline-step timeline-step-left" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="step-number">7</div>
+                        <div class="step-icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h3 class="step-title">مرحلة اختبارات الجودة والتحليل النهائي</h3>
+                        <p class="step-description">
+                            إخضاع الألواح النهائية لمجموعة من الاختبارات المعملية (مثل الكثافة، التوصيل الحراري، مقاومة الضغط) وتقييمها مقابل التوقعات التي قدمها نموذج الذكاء الاصطناعي.
+                        </p>
+                        <div class="step-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="ai-system.html">نظام الذكاء الاصطناعي</a>
+                <a href="#video">شاهد التجربة</a>
+                <a href="#steps">خطوات التجربة</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-researchgate"></i></a>
+            </div>
+            <p class="copyright">تصميم وتطوير بواسطة Botta — جزء من مشروع مسابقة 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // تهيئة مكتبة AOS للحركات
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // تفعيل القائمة المتنقلة
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // إغلاق القائمة عند النقر على رابط
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+
+        // تأثير التمرير السلس للروابط
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // تأثير زر التشغيل
+        document.querySelector('.play-button').addEventListener('click', function() {
+            alert('سيتم تشغيل الفيديو التجريبي هنا عند توافره');
+        });
+    </script>
+</body>
+</html>

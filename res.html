@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض البحث العلمي - Humus Reborn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #B0E0E6;
+            --secondary-color: #E6E6FA;
+            --accent-color: #4ca3ff;
+            --pink: #ffd6e6;
+            --yellow: #fff7cc;
+            --text-dark: #0b0b0b;
+            --text-gray: #6b6b6b;
+            --card-bg: #ffffff;
+            --welcome-bg: #4ca3ff;
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 6px 18px rgba(12, 18, 30, 0.08);
+            --transition: all 0.3s ease;
+            --excellent: #4CAF50;
+            --good: #FFC107;
+            --poor: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid rgba(76, 163, 255, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+            background: rgba(76, 163, 255, 0.1);
+        }
+
+        .nav-links a.cta {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .research-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .page-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: var(--text-gray);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .research-hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .research-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%23ffffff" opacity="0.1"><circle cx="20" cy="20" r="5"/><circle cx="80" cy="40" r="8"/><circle cx="40" cy="80" r="6"/><circle cx="70" cy="70" r="4"/></svg>');
+            background-size: 200px;
+        }
+
+        .research-title {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .research-authors {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .research-abstract {
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pdf-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 2px dashed var(--accent-color);
+        }
+
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pdf-title {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .pdf-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .pdf-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .pdf-btn:hover {
+            background: #3a8de0;
+            transform: translateY(-2px);
+        }
+
+        .pdf-btn.secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .pdf-btn.secondary:hover {
+            background: rgba(76, 163, 255, 0.1);
+        }
+
+        .pdf-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pdf-placeholder {
+            width: 100%;
+            max-width: 300px;
+            height: 400px;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            border: 2px dashed var(--medium-gray);
+        }
+
+        .pdf-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .pdf-info {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .pdf-filename {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .pdf-meta {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .pdf-pages {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pdf-page {
+            width: 60px;
+            height: 80px;
+            background: white;
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pdf-page:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .pdf-page.active {
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .research-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .research-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 14px 30px rgba(20, 30, 60, 0.12);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .card-content {
+            color: var(--text-gray);
+            line-height: 1.7;
+            flex-grow: 1;
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .card-list li {
+            margin-bottom: 0.8rem;
+            padding-right: 1.5rem;
+            position: relative;
+        }
+
+        .card-list li::before {
+            content: '•';
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            right: 0;
+        }
+
+        .variables-section {
+            background: rgba(176, 224, 230, 0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .variables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .variable-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border-right: 4px solid var(--accent-color);
+        }
+
+        .variable-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        .variable-description {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .interactive-element {
+            background: linear-gradient(135deg, var(--pink), var(--yellow));
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: var(--text-dark);
+        }
+
+        .interactive-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .interactive-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .interactive-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .interactive-btn:hover {
+            background: #3a8de0;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            background: var(--welcome-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(76, 163, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--yellow);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background: #ffffff;
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 100%;
+                background: var(--card-bg);
+                padding: 1rem 0;
+                box-shadow: var(--shadow);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .research-container {
+                margin-top: 80px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .page-subtitle {
+                font-size: 1rem;
+            }
+            
+            .research-hero {
+                padding: 2rem;
+            }
+            
+            .research-title {
+                font-size: 1.8rem;
+            }
+            
+            .pdf-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .pdf-actions {
+                justify-content: center;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .interactive-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Humus Reborn — البحث العلمي</a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="experiment.html">تجربة الإنتاج</a></li>
+                <li><a href="ai-system.html">نظام الذكاء الاصطناعي</a></li>
+                <li><a class="cta" href="#research">عرض البحث</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="research-container">
+        <h1 class="page-title">البحث العلمي: تحويل الحمأة إلى ألواح عزل ذكية</h1>
+        <p class="page-subtitle">
+            استكشاف متكامل للفرضيات، الأساس العلمي، التطبيقات، النتائج، والمناقشات المرتبطة بمشروع تحويل الحمأة إلى مواد عازلة متقدمة
+        </p>
+        
+        <!-- قسم البطاقة الرئيسية للبحث -->
+        <section class="research-hero">
+            <h2 class="research-title">تحويل الحمأة إلى ألواح عزل ذكية باستخدام الذكاء الاصطناعي</h2>
+            <p class="research-authors">إعداد: الباحثة / بوتا</p>
+            <p class="research-abstract">
+                يقدم هذا البحث منهجية مبتكرة لتحويل الحمأة الناتجة عن معالجة المياه إلى ألواح عزل حراري وصوتي ذكية. 
+                باستخدام تقنيات الذكاء الاصطناعي، تم تحسين الخلطات وتوقع خصائص المواد الناتجة، مما يفتح آفاقاً جديدة 
+                في مجال إدارة النفايات وإنتاج مواد البناء المستدامة.
+            </p>
+        </section>
+        
+        <!-- قسم ملف PDF -->
+        <section class="pdf-section" id="pdf-section">
+            <div class="pdf-header">
+                <h2 class="pdf-title">
+                    <i class="fas fa-file-pdf"></i>
+                    النسخة الكاملة من البحث
+                </h2>
+                <div class="pdf-actions">
+                    <button class="pdf-btn" onclick="downloadPDF()">
+                        <i class="fas fa-download"></i>
+                        تحميل PDF
+                    </button>
+                    <button class="pdf-btn secondary" onclick="printPDF()">
+                        <i class="fas fa-print"></i>
+                        طباعة
+                    </button>
+                    <button class="pdf-btn secondary" onclick="shareResearch()">
+                        <i class="fas fa-share-alt"></i>
+                        مشاركة
+                    </button>
+                </div>
+            </div>
+            
+            <div class="pdf-preview">
+                <div class="pdf-placeholder">
+                    <i class="fas fa-file-pdf pdf-icon"></i>
+                    <h3>معاينة ملف البحث</h3>
+                    <p>Humus_Reborn_Research.pdf</p>
+                </div>
+                
+                <div class="pdf-info">
+                    <div class="pdf-filename">Humus_Reborn_Research.pdf</div>
+                    <div class="pdf-meta">حجم الملف: 2.4 MB</div>
+                    <div class="pdf-meta">آخر تحديث: 15 مايو 2023</div>
+                    <div class="pdf-meta">عدد الصفحات: 24 صفحة</div>
+                </div>
+                
+                <div class="pdf-pages">
+                    <div class="pdf-page active">1</div>
+                    <div class="pdf-page">2</div>
+                    <div class="pdf-page">3</div>
+                    <div class="pdf-page">4</div>
+                    <div class="pdf-page">5</div>
+                    <div class="pdf-page">+19</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- شبكة البطاقات التفاعلية -->
+        <div class="cards-grid">
+            <!-- بطاقة الفرضيات -->
+            <div class="research-card">
+                <div class="card-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h3 class="card-title">الفرضيات الأساسية</h3>
+                <div class="card-content">
+                    <p>تم بناء البحث على الفرضيات التالية:</p>
+                    <ul class="card-list">
+                        <li>يمكن تحويل الحمأة إلى مادة عازلة فعالة من خلال المعالجة المناسبة</li>
+                        <li>الذكاء الاصطناعي قادر على تحسين نسب الخلط لتحقيق خصائص مثالية</li>
+                        <li>المواد الناتجة ستتمتع بمتانة كافية للتطبيقات الإنشائية</li>
+                        <li>التكلفة الإجمالية ستنخفض مقارنة بمواد العزل التقليدية</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- بطاقة الأساس العلمي -->
+            <div class="research-card">
+                <div class="card-icon">
+                    <i class="fas fa-atom"></i>
+                </div>
+                <h3 class="card-title">الأساس العلمي</h3>
+                <div class="card-content">
+                    <p>يعتمد البحث على المبادئ العلمية التالية:</p>
+                    <ul class="card-list">
+                        <li>كيمياء المواد المركبة وهندسة البوليمرات</li>
+                        <li>فيزياء انتقال الحرارة والعزل الحراري</li>
+                        <li>علم المواد المستدامة والاقتصاد الدائري</li>
+                        <li>تقنيات الذكاء الاصطناعي في تحسين الخصائص</li>
+                        <li>هندسة النفايات الصلبة وإعادة التدوير</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- بطاقة التطبيقات -->
+            <div class="research-card">
+                <div class="card-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3 class="card-title">التطبيقات العملية</h3>
+                <div class="card-content">
+                    <p>يمكن استخدام المواد المنتجة في:</p>
+                    <ul class="card-list">
+                        <li>عزل المباني السكنية والتجارية</li>
+                        <li>أنظمة العزل الصوتي في المسارح والمستشفيات</li>
+                        <li>تغليف الأنابيب والمرافق الصناعية</li>
+                        <li>إنشاء ألواح تقسيم خفيفة الوزن</li>
+                        <li>تطبيقات العزل في السيارات والطائرات</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- بطاقة النتائج -->
+            <div class="research-card">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="card-title">النتائج الرئيسية</h3>
+                <div class="card-content">
+                    <p>تم التوصل إلى النتائج التالية:</p>
+                    <ul class="card-list">
+                        <li>كثافة مثالية تتراوح بين 400-600 كجم/م³</li>
+                        <li>توصيل حراري منخفض (0.12-0.18 واط/م.ك)</li>
+                        <li>عزل صوتي بمستوى 45-55 ديسيبل</li>
+                        <li>مقاومة ضغط تصل إلى 3.5 ميجاباسكال</li>
+                        <li>انخفاض التكلفة بنسبة 40% مقارنة بالمواد التقليدية</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- بطاقة المناقشة -->
+            <div class="research-card">
+                <div class="card-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="card-title">المناقشة والتحليل</h3>
+                <div class="card-content">
+                    <p>تشير النتائج إلى:</p>
+                    <ul class="card-list">
+                        <li>كفاءة عالية في تحويل النفايات إلى مواد قيمة</li>
+                        <li>إمكانية تطوير نماذج أكثر تطوراً باستخدام الذكاء الاصطناعي</li>
+                        <li>تأثير إيجابي على البيئة من خلال تقليل النفايات</li>
+                        <li>فرص تسويقية واعدة في صناعة البناء المستدام</li>
+                        <li>حاجة إلى مزيد من البحث حول المتانة طويلة المدى</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- بطاقة الهدف -->
+            <div class="research-card">
+                <div class="card-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3 class="card-title">الهدف والغايات</h3>
+                <div class="card-content">
+                    <p>يهدف البحث إلى تحقيق:</p>
+                    <ul class="card-list">
+                        <li>تحويل النفايات إلى مواد بناء قيمة</li>
+                        <li>تطوير مواد عازلة صديقة للبيئة</li>
+                        <li>خفض تكاليف البناء والعزل</li>
+                        <li>تطبيق تقنيات الذكاء الاصطناعي في صناعة المواد</li>
+                        <li>المساهمة في تحقيق أهداف التنمية المستدامة</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- قسم المتغيرات -->
+        <section class="variables-section">
+            <h2 class="section-title">المتغيرات المدروسة</h2>
+            <div class="variables-grid">
+                <div class="variable-card">
+                    <h3 class="variable-title">المتغيرات المستقلة</h3>
+                    <p class="variable-description">
+                        نسبة الحمأة، نوع الإضافات، نسبة الماء، وقت الخلط، ظروف المعالجة، 
+                        درجة الحرارة، نسبة الأسمنت، نوع المواد المساعدة.
+                    </p>
+                </div>
+                
+                <div class="variable-card">
+                    <h3 class="variable-title">المتغيرات التابعة</h3>
+                    <p class="variable-description">
+                        الكثافة، التوصيل الحراري، العزل الصوتي، مقاومة الضغط، 
+                        الامتصاص المائي، المتانة، التكلفة، الوقت اللازم للتصلب.
+                    </p>
+                </div>
+                
+                <div class="variable-card">
+                    <h3 class="variable-title">المتغيرات الضابطة</h3>
+                    <p class="variable-description">
+                        مصدر الحمأة، طريقة التجفيف، نوع الخلاط، حجم القوالب، 
+                        ظروف المختبر، أدوات القياس، منهجية الاختبار.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- قسم المصادر والمراجع -->
+        <section class="research-card">
+            <div class="card-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <h3 class="card-title">المصادر والمراجع</h3>
+            <div class="card-content">
+                <ul class="card-list">
+                    <li>Smith, J. (2020). Sustainable Building Materials. Elsevier.</li>
+                    <li>Zhang, L., & Wang, H. (2019). AI in Material Science. Springer.</li>
+                    <li>الجمعية الأمريكية لاختبار المواد (ASTM) - معايير C518, C177</li>
+                    <li>منظمة الصحة العالمية - تقارير جودة الهواء الداخلي (2021)</li>
+                    <li>Kim, S., et al. (2018). Waste to Value Conversion. Journal of Cleaner Production.</li>
+                    <li>التقارير السنوية لبرنامج الأمم المتحدة للبيئة (2019-2022)</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- عنصر تفاعلي -->
+        <section class="interactive-element">
+            <h2 class="interactive-title">استكشاف البحث بشكل تفاعلي</h2>
+            <div class="interactive-buttons">
+                <button class="interactive-btn" onclick="showSection('hypotheses')">
+                    <i class="fas fa-lightbulb"></i> عرض الفرضيات
+                </button>
+                <button class="interactive-btn" onclick="showSection('methodology')">
+                    <i class="fas fa-flask"></i> المنهجية
+                </button>
+                <button class="interactive-btn" onclick="showSection('results')">
+                    <i class="fas fa-chart-bar"></i> النتائج التفصيلية
+                </button>
+                <button class="interactive-btn" onclick="showSection('conclusion')">
+                    <i class="fas fa-flag"></i> الخلاصة
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="experiment.html">تجربة الإنتاج</a>
+                <a href="ai-system.html">نظام الذكاء الاصطناعي</a>
+                <a href="#research">عرض البحث</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-researchgate"></i></a>
+            </div>
+            <p class="copyright">تصميم وتطوير بواسطة Botta — جزء من مشروع مسابقة 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // تفعيل القائمة المتنقلة
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // إغلاق القائمة عند النقر على رابط
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+
+        // تأثير التمرير السلس للروابط
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // وظيفة العناصر التفاعلية
+        function showSection(section) {
+            const sections = {
+                'hypotheses': 'الفرضيات',
+                'methodology': 'المنهجية',
+                'results': 'النتائج',
+                'conclusion': 'الخلاصة'
+            };
+            
+            alert(`سيتم عرض قسم ${sections[section]} بالتفصيل في نسخة مطورة من الصفحة`);
+        }
+
+        // وظائف ملف PDF
+        function downloadPDF() {
+            alert('جاري تحميل ملف البحث...');
+            // في التطبيق الحقيقي، سيتم رفع ملف PDF هنا
+            // window.open('path/to/your/research.pdf', '_blank');
+        }
+
+        function printPDF() {
+            alert('جاري تحضير ملف البحث للطباعة...');
+            // في التطبيق الحقيقي، سيتم فتح نافذة الطباعة
+            // window.print();
+        }
+
+        function shareResearch() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'بحث Humus Reborn - تحويل الحمأة إلى ألواح عزل ذكية',
+                    text: 'اكتشف هذا البحث المبتكر في تحويل النفايات إلى مواد بناء مستدامة',
+                    url: window.location.href
+                })
+                .then(() => console.log('تمت المشاركة بنجاح'))
+                .catch((error) => console.log('خطأ في المشاركة', error));
+            } else {
+                alert('ميزة المشاركة غير مدعومة في هذا المتصفح. يمكنك نسخ الرابط ومشاركته يدوياً.');
+            }
+        }
+
+        // تفعيل اختيار صفحات PDF
+        const pdfPages = document.querySelectorAll('.pdf-page');
+        pdfPages.forEach(page => {
+            page.addEventListener('click', function() {
+                pdfPages.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                
+                const pageNum = this.textContent;
+                if (pageNum !== '+19') {
+                    alert(`عرض الصفحة ${pageNum} من البحث`);
+                } else {
+                    alert('عرض الصفحات المتبقية من البحث');
+                }
+            });
+        });
+
+        // تأثيرات عند التمرير
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.research-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

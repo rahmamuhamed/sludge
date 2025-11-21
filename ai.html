@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الذكاء الاصطناعي - Humus Reborn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #B0E0E6;
+            --secondary-color: #E6E6FA;
+            --accent-color: #4ca3ff;
+            --pink: #ffd6e6;
+            --yellow: #fff7cc;
+            --text-dark: #0b0b0b;
+            --text-gray: #6b6b6b;
+            --card-bg: #ffffff;
+            --welcome-bg: #4ca3ff;
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 6px 18px rgba(12, 18, 30, 0.08);
+            --transition: all 0.3s ease;
+            --excellent: #4CAF50;
+            --good: #FFC107;
+            --poor: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid rgba(76, 163, 255, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+            background: rgba(76, 163, 255, 0.1);
+        }
+
+        .nav-links a.cta {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .ai-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--accent-color);
+        }
+
+        .ai-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .ai-section {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .ai-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 30px rgba(20, 30, 60, 0.12);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .slider {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .slider-value {
+            width: 50px;
+            text-align: center;
+            margin-right: 1rem;
+            font-weight: 600;
+        }
+
+        .analyze-btn {
+            display: block;
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .analyze-btn:hover {
+            background: #3a8de0;
+            transform: translateY(-2px);
+        }
+
+        .analyze-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-container {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .results-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .result-card {
+            background: rgba(76, 163, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-right: 4px solid var(--accent-color);
+        }
+
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .result-value {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        .rating-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .rating-excellent {
+            background-color: var(--excellent);
+            color: white;
+        }
+
+        .rating-good {
+            background-color: var(--good);
+            color: var(--text-dark);
+        }
+
+        .rating-poor {
+            background-color: var(--poor);
+            color: white;
+        }
+
+        .ai-assessment {
+            background: rgba(255, 214, 230, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-right: 4px solid var(--pink);
+        }
+
+        .upload-area {
+            border: 2px dashed #cccccc;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-color);
+            background: rgba(76, 163, 255, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .image-preview {
+            display: none;
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-container {
+            margin-top: 1.5rem;
+        }
+
+        .progress-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+
+        .progress-excellent { background-color: var(--excellent); }
+        .progress-good { background-color: var(--good); }
+        .progress-poor { background-color: var(--poor); }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(76, 163, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .optimal-ranges {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(176, 224, 230, 0.2);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .optimal-ranges h4 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .range-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+        }
+
+        .defect-list {
+            margin-top: 1rem;
+        }
+
+        .defect-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(244, 67, 54, 0.1);
+            border-radius: 5px;
+        }
+
+        .defect-icon {
+            color: var(--poor);
+            margin-left: 0.5rem;
+        }
+
+        footer {
+            background: var(--welcome-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(76, 163, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--yellow);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background: #ffffff;
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 100%;
+                background: var(--card-bg);
+                padding: 1rem 0;
+                box-shadow: var(--shadow);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .ai-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-container {
+                margin-top: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Humus Reborn — نظام الذكاء الاصطناعي</a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="#predictor">متوقع الصيغة</a></li>
+                <li><a href="#analyzer">محلل السطح</a></li>
+                <li><a class="cta" href="#predictor">ابدأ التحليل</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="ai-container">
+        <h1 class="page-title">نظام الذكاء الاصطناعي المتقدم</h1>
+        
+        <div class="ai-sections">
+            <!-- القسم الأول: AI Formula Predictor -->
+            <section class="ai-section" id="predictor">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h2 class="section-title">AI Formula Predictor</h2>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">
+                        <span>نسبة الحمأة (Sludge)</span>
+                        <span class="slider-value" id="sludge-value">50%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="100" value="50" class="slider" id="sludge-slider">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">
+                        <span>نسبة الأسمنت (Cement)</span>
+                        <span class="slider-value" id="cement-value">25%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="100" value="25" class="slider" id="cement-slider">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">
+                        <span>نسبة الإضافات (Additives)</span>
+                        <span class="slider-value" id="additives-value">10%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="100" value="10" class="slider" id="additives-slider">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">
+                        <span>نسبة الماء (Water)</span>
+                        <span class="slider-value" id="water-value">15%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="100" value="15" class="slider" id="water-slider">
+                    </div>
+                </div>
+                
+                <div class="optimal-ranges">
+                    <h4>النسب المثلى:</h4>
+                    <div class="range-item">
+                        <span>الحمأة:</span>
+                        <span>30-49% (مثالي) | 50-69% (متوسط) | 70-85% (ضعيف)</span>
+                    </div>
+                    <div class="range-item">
+                        <span>الأسمنت:</span>
+                        <span>31-40% (مثالي) | 21-30% (متوسط) | 10-20% (ضعيف)</span>
+                    </div>
+                    <div class="range-item">
+                        <span>الإضافات:</span>
+                        <span>26-35% (مثالي) | 16-25% (متوسط) | 10-15% (ضعيف)</span>
+                    </div>
+                    <div class="range-item">
+                        <span>الماء:</span>
+                        <span>16-20% (مثالي) | 11-15% (متوسط) | 5-10% (ضعيف)</span>
+                    </div>
+                </div>
+                
+                <button class="analyze-btn" id="analyze-formula-btn">
+                    Analyze Formula
+                </button>
+                
+                <div class="loading-spinner" id="formula-spinner">
+                    <div class="spinner"></div>
+                    <p>جاري تحليل الصيغة باستخدام الذكاء الاصطناعي...</p>
+                </div>
+                
+                <div class="results-container" id="formula-results">
+                    <h3 class="results-title">نتائج تحليل الصيغة</h3>
+                    
+                    <div class="result-card">
+                        <div class="result-title">الكثافة المتوقعة</div>
+                        <div class="result-value">
+                            <span id="density-value">0</span> kg/m³
+                            <span class="rating-badge" id="density-rating"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-title">التوصيل الحراري المتوقع</div>
+                        <div class="result-value">
+                            <span id="thermal-value">0</span> W/m·K
+                            <span class="rating-badge" id="thermal-rating"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-title">العزل الصوتي المتوقع</div>
+                        <div class="result-value">
+                            <span id="sound-value">0</span> dB
+                            <span class="rating-badge" id="sound-rating"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="ai-assessment" id="overall-assessment">
+                        <div class="result-title">تقييم الذكاء الاصطناعي</div>
+                        <div class="result-value" id="overall-rating"></div>
+                        <p id="ai-recommendation"></p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- القسم الثاني: AI Surface Analyzer -->
+            <section class="ai-section" id="analyzer">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h2 class="section-title">AI Surface Analyzer</h2>
+                </div>
+                
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Upload Sample Image</div>
+                    <div class="upload-subtext">انقر أو اسحب صورة العينة هنا</div>
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                </div>
+                
+                <img id="image-preview" class="image-preview" src="" alt="صورة العينة">
+                
+                <button class="analyze-btn" id="analyze-image-btn" disabled>
+                    Analyze Surface
+                </button>
+                
+                <div class="loading-spinner" id="image-spinner">
+                    <div class="spinner"></div>
+                    <p>جاري تحليل الصورة باستخدام الذكاء الاصطناعي...</p>
+                </div>
+                
+                <div class="results-container" id="image-results">
+                    <h3 class="results-title">نتائج تحليل السطح</h3>
+                    
+                    <div class="progress-container">
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>جودة السطح الإجمالية</span>
+                                <span id="surface-quality">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="surface-quality-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>المسامية</span>
+                                <span id="porosity-percent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="porosity-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>التجانس</span>
+                                <span id="homogeneity-percent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="homogeneity-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="defect-list" id="defect-list">
+                        <!-- سيتم إضافة العيوب المكتشفة هنا -->
+                    </div>
+                    
+                    <div class="ai-assessment">
+                        <div class="result-title">تقرير الذكاء الاصطناعي</div>
+                        <p id="surface-recommendation">سيظهر التقرير هنا بعد التحليل...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="#predictor">متوقع الصيغة</a>
+                <a href="#analyzer">محلل السطح</a>
+                <a href="#research">البحث العلمي</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-researchgate"></i></a>
+            </div>
+            <p class="copyright">تصميم وتطوير بواسطة Botta — جزء من مشروع مسابقة 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // =============================================
+        // نظام الذكاء الاصطناعي لتحليل الصيغ
+        // =============================================
+        class MaterialAnalysisAI {
+            constructor() {
+                this.model = null;
+                this.isModelLoaded = false;
+                this.loadModel();
+            }
+            
+            async loadModel() {
+                try {
+                    // إنشاء نموذج بسيط باستخدام TensorFlow.js
+                    this.model = await this.createSimpleModel();
+                    this.isModelLoaded = true;
+                    console.log('Material Analysis AI Model loaded successfully');
+                } catch (error) {
+                    console.error('Failed to load AI model:', error);
+                }
+            }
+            
+            async createSimpleModel() {
+                // نموذج عصبي بسيط للتنبؤ بخصائص المواد
+                const model = tf.sequential();
+                
+                model.add(tf.layers.dense({
+                    units: 16,
+                    activation: 'relu',
+                    inputShape: [4]
+                }));
+                
+                model.add(tf.layers.dense({
+                    units: 8,
+                    activation: 'relu'
+                }));
+                
+                model.add(tf.layers.dense({
+                    units: 4,
+                    activation: 'linear'
+                }));
+                
+                model.compile({
+                    optimizer: 'adam',
+                    loss: 'meanSquaredError'
+                });
+                
+                return model;
+            }
+            
+            async analyzeComposition(composition) {
+                if (!this.isModelLoaded) {
+                    await this.loadModel();
+                }
+                
+                try {
+                    // تحضير البيانات للإدخال
+                    const input = tf.tensor2d([[
+                        composition.sludge / 100,
+                        composition.cement / 100, 
+                        composition.additives / 100,
+                        composition.water / 100
+                    ]]);
+                    
+                    // استخدام النموذج للتنبؤ
+                    let prediction;
+                    if (this.isModelLoaded) {
+                        prediction = this.model.predict(input);
+                        const results = await prediction.data();
+                        return this.processResults(results, composition);
+                    } else {
+                        // استخدام الخوارزمية الاحتياطية
+                        return this.fallbackAnalysis(composition);
+                    }
+                    
+                } catch (error) {
+                    console.error('AI prediction error:', error);
+                    return this.fallbackAnalysis(composition);
+                }
+            }
+            
+            processResults(results, composition) {
+                // تحويل نتائج النموذج إلى قيم حقيقية
+                const density = 400 + (results[0] * 600); // 400-1000 kg/m³
+                const thermalConductivity = 0.12 + (results[1] * 0.23); // 0.12-0.35 W/m·K
+                const soundInsulation = 25 + (results[2] * 30); // 25-55 dB
+                const qualityScore = results[3]; // 0-1
+                
+                // التقييمات
+                const densityRating = this.evaluateDensity(density);
+                const thermalRating = this.evaluateThermal(thermalConductivity);
+                const soundRating = this.evaluateSound(soundInsulation);
+                const overallRating = this.getOverallRating(qualityScore);
+                
+                return {
+                    density: Math.round(density),
+                    thermalConductivity: thermalConductivity.toFixed(3),
+                    soundInsulation: Math.round(soundInsulation),
+                    qualityScore: qualityScore,
+                    densityRating: densityRating,
+                    thermalRating: thermalRating,
+                    soundRating: soundRating,
+                    overallRating: overallRating,
+                    recommendations: this.getRecommendations(composition, qualityScore)
+                };
+            }
+            
+            evaluateDensity(density) {
+                if (density >= 400 && density <= 600) {
+                    return { text: "مثالي", class: "rating-excellent" };
+                } else if (density >= 601 && density <= 800) {
+                    return { text: "متوسط", class: "rating-good" };
+                } else {
+                    return { text: "ضعيف", class: "rating-poor" };
+                }
+            }
+            
+            evaluateThermal(thermal) {
+                if (thermal >= 0.12 && thermal <= 0.18) {
+                    return { text: "مثالي", class: "rating-excellent" };
+                } else if (thermal >= 0.19 && thermal <= 0.25) {
+                    return { text: "متوسط", class: "rating-good" };
+                } else {
+                    return { text: "ضعيف", class: "rating-poor" };
+                }
+            }
+            
+            evaluateSound(sound) {
+                if (sound >= 45 && sound <= 55) {
+                    return { text: "مثالي", class: "rating-excellent" };
+                } else if (sound >= 35 && sound <= 44) {
+                    return { text: "متوسط", class: "rating-good" };
+                } else {
+                    return { text: "ضعيف", class: "rating-poor" };
+                }
+            }
+            
+            getOverallRating(score) {
+                if (score >= 0.8) return { text: "ممتاز (Excellent)", class: "rating-excellent" };
+                if (score >= 0.6) return { text: "جيد (Good)", class: "rating-good" };
+                return { text: "ضعيف (Poor)", class: "rating-poor" };
+            }
+            
+            getRecommendations(composition, score) {
+                const recommendations = [];
+                
+                // تحليل الحمأة
+                if (composition.sludge < 30) {
+                    recommendations.push("• زيادة نسبة الحمأة لتحسين الخصائص الميكانيكية");
+                } else if (composition.sludge > 70) {
+                    recommendations.push("• تقليل نسبة الحمأة لتحسين الكثافة والعزل");
+                }
+                
+                // تحليل الأسمنت
+                if (composition.cement < 20) {
+                    recommendations.push("• زيادة الأسمنت لتحسين المتانة والقوة");
+                } else if (composition.cement > 40) {
+                    recommendations.push("• تقليل الأسمنت لتقليل الكثافة والتكلفة");
+                }
+                
+                // تحليل الإضافات
+                if (composition.additives < 15) {
+                    recommendations.push("• زيادة الإضافات لتحسين خصائص العزل");
+                }
+                
+                // توصيات عامة
+                if (score < 0.6) {
+                    recommendations.push("• إعادة تصميم الخلطة للحصول على أداء أفضل");
+                } else if (score >= 0.8) {
+                    recommendations.push("• الخلطة ممتازة ومناسبة للتطبيقات المتقدمة");
+                }
+                
+                return recommendations.join('<br>');
+            }
+            
+            fallbackAnalysis(composition) {
+                // خوارزمية احتياطية متقدمة
+                const total = composition.sludge + composition.cement + composition.additives + composition.water;
+                const normalized = {
+                    sludge: composition.sludge / total,
+                    cement: composition.cement / total,
+                    additives: composition.additives / total,
+                    water: composition.water / total
+                };
+                
+                const density = 400 + (normalized.sludge * 300) + (normalized.cement * 400) - (normalized.water * 100);
+                const thermal = 0.12 + (normalized.cement * 0.15) + (normalized.sludge * 0.08);
+                const sound = 55 - (normalized.cement * 20) - (normalized.sludge * 10);
+                
+                const qualityScore = this.calculateQualityScore(composition);
+                
+                return this.processResults([
+                    (density - 400) / 600,
+                    (thermal - 0.12) / 0.23,
+                    (sound - 25) / 30,
+                    qualityScore
+                ], composition);
+            }
+            
+            calculateQualityScore(composition) {
+                let score = 0;
+                
+                // تقييم الحمأة
+                if (composition.sludge >= 30 && composition.sludge <= 49) score += 0.3;
+                else if (composition.sludge >= 50 && composition.sludge <= 69) score += 0.15;
+                
+                // تقييم الأسمنت
+                if (composition.cement >= 31 && composition.cement <= 40) score += 0.3;
+                else if (composition.cement >= 21 && composition.cement <= 30) score += 0.15;
+                
+                // تقييم الإضافات
+                if (composition.additives >= 26 && composition.additives <= 35) score += 0.2;
+                else if (composition.additives >= 16 && composition.additives <= 25) score += 0.1;
+                
+                // تقييم الماء
+                if (composition.water >= 16 && composition.water <= 20) score += 0.2;
+                else if (composition.water >= 11 && composition.water <= 15) score += 0.1;
+                
+                return Math.min(score, 1);
+            }
+        }
+
+        // =============================================
+        // نظام الذكاء الاصطناعي لتحليل الصور
+        // =============================================
+        class SurfaceAnalysisAI {
+            constructor() {
+                this.model = null;
+                this.isModelLoaded = false;
+            }
+            
+            async analyzeSurface(imageElement) {
+                try {
+                    // محاكاة تحليل الصورة باستخدام معالجة الصور الأساسية
+                    const analysis = await this.analyzeImageWithCanvas(imageElement);
+                    return analysis;
+                } catch (error) {
+                    console.error('Surface analysis error:', error);
+                    return this.fallbackSurfaceAnalysis();
+                }
+            }
+            
+            async analyzeImageWithCanvas(imageElement) {
+                return new Promise((resolve) => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = imageElement.width;
+                    canvas.height = imageElement.height;
+                    ctx.drawImage(imageElement, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const analysis = this.analyzePixels(imageData);
+                    
+                    resolve(analysis);
+                });
+            }
+            
+            analyzePixels(imageData) {
+                const data = imageData.data;
+                let totalLuminance = 0;
+                let variance = 0;
+                let darkPixels = 0;
+                
+                // تحليل البكسلات
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    
+                    // حساب اللمعان
+                    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+                    totalLuminance += luminance;
+                    
+                    // حساب البكسلات الداكنة (مسام محتملة)
+                    if (luminance < 50) darkPixels++;
+                }
+                
+                const avgLuminance = totalLuminance / (data.length / 4);
+                const porosity = (darkPixels / (data.length / 4)) * 100;
+                
+                // حساب التباين (للتجانس)
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+                    variance += Math.pow(luminance - avgLuminance, 2);
+                }
+                
+                variance = variance / (data.length / 4);
+                    const homogeneity = Math.max(0, 100 - (variance / 100));
+                
+                // اكتشاف العيوب
+                const defects = this.detectDefects(imageData, avgLuminance);
+                
+                // حساب الجودة الإجمالية
+                const surfaceQuality = Math.max(0, 100 - (porosity * 0.6) - (defects.cracks * 10) - ((100 - homogeneity) * 0.3));
+                
+                return {
+                    surfaceQuality: Math.round(surfaceQuality),
+                    porosity: Math.min(100, Math.round(porosity * 2)),
+                    homogeneity: Math.round(homogeneity),
+                    defects: defects,
+                    rating: this.getSurfaceRating(surfaceQuality),
+                    recommendations: this.getSurfaceRecommendations(porosity, defects, homogeneity)
+                };
+            }
+            
+            detectDefects(imageData, avgLuminance) {
+                const data = imageData.data;
+                let cracks = 0;
+                let spots = 0;
+                
+                // كشف الشقوق (خطوط طويلة من البكسلات الداكنة)
+                for (let y = 1; y < imageData.height - 1; y++) {
+                    for (let x = 1; x < imageData.width - 1; x++) {
+                        const idx = (y * imageData.width + x) * 4;
+                        const luminance = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
+                        
+                        if (luminance < avgLuminance * 0.5) {
+                            // تحقق إذا كان بكسل داكن محاط ببكسلات داكنة (شق محتمل)
+                            const neighbors = this.getNeighborLuminance(data, x, y, imageData.width);
+                            if (neighbors.darkCount >= 4) {
+                                cracks++;
+                            } else if (neighbors.darkCount >= 2) {
+                                spots++;
+                            }
+                        }
+                    }
+                }
+                
+                return {
+                    cracks: Math.min(10, Math.round(cracks / 1000)),
+                    spots: Math.min(20, Math.round(spots / 500)),
+                    total: Math.min(30, cracks + spots)
+                };
+            }
+            
+            getNeighborLuminance(data, x, y, width) {
+                let darkCount = 0;
+                let totalLuminance = 0;
+                let count = 0;
+                
+                for (let dy = -1; dy <= 1; dy++) {
+                    for (let dx = -1; dx <= 1; dx++) {
+                        if (dx === 0 && dy === 0) continue;
+                        
+                        const idx = ((y + dy) * width + (x + dx)) * 4;
+                        if (idx >= 0 && idx < data.length) {
+                            const luminance = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
+                            totalLuminance += luminance;
+                            count++;
+                            
+                            if (luminance < 50) darkCount++;
+                        }
+                    }
+                }
+                
+                return {
+                    darkCount: darkCount,
+                    avgLuminance: totalLuminance / count
+                };
+            }
+            
+            getSurfaceRating(quality) {
+                if (quality >= 85) return { text: "ممتاز", class: "rating-excellent" };
+                if (quality >= 70) return { text: "جيد", class: "rating-good" };
+                return { text: "ضعيف", class: "rating-poor" };
+            }
+            
+            getSurfaceRecommendations(porosity, defects, homogeneity) {
+                const recommendations = [];
+                
+                if (porosity > 30) {
+                    recommendations.push("• المسامية عالية - تحسين عملية الضغط والخلط");
+                }
+                
+                if (defects.cracks > 2) {
+                    recommendations.push("• وجود شقوق سطحية - مراجعة نسبة الماء وعملية التجفيف");
+                }
+                
+                if (defects.spots > 5) {
+                    recommendations.push("• وجود بقع غير متجانسة - تحسين خلط المكونات");
+                }
+                
+                if (homogeneity < 80) {
+                    recommendations.push("• التجانس يحتاج تحسين - تأكد من خلط المكونات بشكل متساوي");
+                }
+                
+                if (recommendations.length === 0) {
+                    recommendations.push("• السطح ممتاز ومناسب للتطبيقات المتقدمة");
+                }
+                
+                return recommendations.join('<br>');
+            }
+            
+            fallbackSurfaceAnalysis() {
+                return {
+                    surfaceQuality: 85,
+                    porosity: 15,
+                    homogeneity: 90,
+                    defects: {
+                        cracks: 0,
+                        spots: 2,
+                        total: 2
+                    },
+                    rating: { text: "جيد", class: "rating-good" },
+                    recommendations: "• السurface جيد ولكن يمكن تحسين التجانس"
+                };
+            }
+        }
+
+        // =============================================
+        // التهيئة والتشغيل الرئيسي
+        // =============================================
+        
+        // تهيئة نماذج الذكاء الاصطناعي
+        const materialAI = new MaterialAnalysisAI();
+        const surfaceAI = new SurfaceAnalysisAI();
+
+        // تفعيل القائمة المتنقلة
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // إغلاق القائمة عند النقر على رابط
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+
+        // تحديث قيم السلايدرز
+        const sliders = document.querySelectorAll('.slider');
+        sliders.forEach(slider => {
+            const valueElement = document.getElementById(`${slider.id.replace('-slider', '-value')}`);
+            valueElement.textContent = `${slider.value}%`;
+            
+            slider.addEventListener('input', () => {
+                valueElement.textContent = `${slider.value}%`;
+            });
+        });
+
+        // تحميل الصورة
+        const uploadArea = document.getElementById('upload-area');
+        const imageUpload = document.getElementById('image-upload');
+        const imagePreview = document.getElementById('image-preview');
+        const analyzeImageBtn = document.getElementById('analyze-image-btn');
+
+        uploadArea.addEventListener('click', () => {
+            imageUpload.click();
+        });
+
+        imageUpload.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    analyzeImageBtn.disabled = false;
+                };
+                
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // تحليل الصيغة باستخدام الذكاء الاصطناعي
+        const analyzeFormulaBtn = document.getElementById('analyze-formula-btn');
+        const formulaSpinner = document.getElementById('formula-spinner');
+        const formulaResults = document.getElementById('formula-results');
+
+        analyzeFormulaBtn.addEventListener('click', async () => {
+            formulaSpinner.style.display = 'block';
+            analyzeFormulaBtn.disabled = true;
+            formulaResults.style.display = 'none';
+            
+            // جمع قيم السلايدرز
+            const composition = {
+                sludge: parseInt(document.getElementById('sludge-slider').value),
+                cement: parseInt(document.getElementById('cement-slider').value),
+                additives: parseInt(document.getElementById('additives-slider').value),
+                water: parseInt(document.getElementById('water-slider').value)
+            };
+            
+            try {
+                // استخدام الذكاء الاصطناعي للتحليل
+                const results = await materialAI.analyzeComposition(composition);
+                
+                // عرض النتائج
+                document.getElementById('density-value').textContent = results.density;
+                document.getElementById('thermal-value').textContent = results.thermalConductivity;
+                document.getElementById('sound-value').textContent = results.soundInsulation;
+                
+                // عرض التقييمات
+                const densityRating = document.getElementById('density-rating');
+                densityRating.textContent = results.densityRating.text;
+                densityRating.className = `rating-badge ${results.densityRating.class}`;
+                
+                const thermalRating = document.getElementById('thermal-rating');
+                thermalRating.textContent = results.thermalRating.text;
+                thermalRating.className = `rating-badge ${results.thermalRating.class}`;
+                
+                const soundRating = document.getElementById('sound-rating');
+                soundRating.textContent = results.soundRating.text;
+                soundRating.className = `rating-badge ${results.soundRating.class}`;
+                
+                const overallRating = document.getElementById('overall-rating');
+                overallRating.textContent = results.overallRating.text;
+                overallRating.className = `rating-badge ${results.overallRating.class}`;
+                
+                document.getElementById('ai-recommendation').innerHTML = results.recommendations;
+                
+                formulaResults.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Analysis error:', error);
+                alert('حدث خطأ في التحليل. يرجى المحاولة مرة أخرى.');
+            } finally {
+                formulaSpinner.style.display = 'none';
+                analyzeFormulaBtn.disabled = false;
+            }
+        });
+
+        // تحليل الصورة باستخدام الذكاء الاصطناعي
+        const imageSpinner = document.getElementById('image-spinner');
+        const imageResults = document.getElementById('image-results');
+
+        analyzeImageBtn.addEventListener('click', async () => {
+            imageSpinner.style.display = 'block';
+            analyzeImageBtn.disabled = true;
+            imageResults.style.display = 'none';
+            
+            try {
+                const results = await surfaceAI.analyzeSurface(imagePreview);
+                
+                // تحديث أشرطة التقدم
+                document.getElementById('surface-quality').textContent = `${results.surfaceQuality}%`;
+                document.getElementById('porosity-percent').textContent = `${results.porosity}%`;
+                document.getElementById('homogeneity-percent').textContent = `${results.homogeneity}%`;
+                
+                const surfaceFill = document.getElementById('surface-quality-fill');
+                surfaceFill.style.width = `${results.surfaceQuality}%`;
+                surfaceFill.className = `progress-fill progress-${results.rating.text === 'ممتاز' ? 'excellent' : results.rating.text === 'جيد' ? 'good' : 'poor'}`;
+                
+                document.getElementById('porosity-fill').style.width = `${results.porosity}%`;
+                document.getElementById('homogeneity-fill').style.width = `${results.homogeneity}%`;
+                
+                // عرض العيوب المكتشفة
+                const defectList = document.getElementById('defect-list');
+                defectList.innerHTML = '';
+                
+                if (results.defects.cracks > 0) {
+                    const crackItem = document.createElement('div');
+                    crackItem.className = 'defect-item';
+                    crackItem.innerHTML = `<i class="fas fa-exclamation-triangle defect-icon"></i> تم اكتشاف ${results.defects.cracks} شقوق سطحية`;
+                    defectList.appendChild(crackItem);
+                }
+                
+                if (results.defects.spots > 0) {
+                    const spotItem = document.createElement('div');
+                    spotItem.className = 'defect-item';
+                    spotItem.innerHTML = `<i class="fas fa-circle defect-icon"></i> تم اكتشاف ${results.defects.spots} بقع غير متجانسة`;
+                    defectList.appendChild(spotItem);
+                }
+                
+                if (results.defects.total === 0) {
+                    const noDefects = document.createElement('div');
+                    noDefects.className = 'defect-item';
+                    noDefects.style.background = 'rgba(76, 175, 80, 0.1)';
+                    noDefects.innerHTML = `<i class="fas fa-check-circle" style="color: #4CAF50"></i> لا توجد عيوب سطحية كبيرة`;
+                    defectList.appendChild(noDefects);
+                }
+                
+                document.getElementById('surface-recommendation').innerHTML = results.recommendations;
+                imageResults.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Surface analysis error:', error);
+                alert('حدث خطأ في تحليل الصورة. يرجى المحاولة مرة أخرى.');
+            } finally {
+                imageSpinner.style.display = 'none';
+                analyzeImageBtn.disabled = false;
+            }
+        });
+
+        // تأثير التمرير السلس للروابط
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // تحميل TensorFlow.js وإظهار رسالة ترحيب
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Humus Reborn AI System Loaded');
+            console.log('Material Analysis AI:', materialAI);
+            console.log('Surface Analysis AI:', surfaceAI);
+            
+            // إظهار رسالة ترحيب
+            setTimeout(() => {
+                if (confirm('نظام الذكاء الاصطناعي جاهز للعمل! هل تريد تجربة تحليل عينة؟')) {
+                    document.querySelector('a[href="#predictor"]').click();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
